@@ -1,56 +1,46 @@
 pkgname=clipboard-history
-pkgver=0.1
+pkgver=0.2
 pkgrel=1
-pkgdesc="Aplicación en Python para guardar y visualizar el historial del portapapeles"
+pkgdesc="Clipboard history manager built in Python (Gestor de historial del portapapeles en Python)"
 arch=('any')
-url="https://github.com/tuusuario/clipboard-history"
+url="https://github.com/Leonardo-Antonio/clipboard-history"
 license=('MIT')
+depends=('python' 'xclip' 'xsel' 'wl-clipboard' 'gtk3' 'python-gobject' 'python-pyperclip' 'python-pyautogui')
+makedepends=('python-pip')
 
-depends=('python' 'xclip' 'xsel' 'wl-clipboard' 'gtk3' 'python-gobject')  # libs del sistema
-makedepends=('python-pip' 'python-virtualenv')  # para crear venv e instalar deps
-
-source=("https://github.com/Leonardo-Antonio/clipboard-history/releases/download/v0.1/clipboard-history.tar.gz")
+source=("https://github.com/Leonardo-Antonio/clipboard-history/releases/download/v$pkgver/clipboard-history.tar.gz")
 sha256sums=('SKIP')
+
 build() {
-  cd "$srcdir"
-  python -m venv venv-build
-  source venv-build/bin/activate
-  pip install --upgrade pip
-  pip install -r requirements.txt
-  deactivate
+  cd "$srcdir/$pkgname-$pkgver"
+  # No es necesario construir nada
 }
 
 package() {
-  cd "$srcdir"
+  cd "$srcdir/$pkgname-$pkgver"
 
-  install -Dm755 "launch.bash" "$pkgdir/usr/bin/clipboard-history"
-  install -Dm755 "clipboard_history.sh" "$pkgdir/usr/share/clipboard-history/clipboard_history.sh"
-  install -Dm644 "main.py" "$pkgdir/usr/share/clipboard-history/main.py"
-  install -Dm644 "requirements.txt" "$pkgdir/usr/share/clipboard-history/requirements.txt"
+  install -d "$pkgdir/usr/share/$pkgname"
+  install -Dm755 clipboard_history.sh "$pkgdir/usr/share/$pkgname/clipboard_history.sh"
+  install -Dm644 main.py "$pkgdir/usr/share/$pkgname/main.py"
+  install -Dm644 requirements.txt "$pkgdir/usr/share/$pkgname/requirements.txt"
 
-  install -d "$pkgdir/usr/share/clipboard-history/assets"
-  install -Dm644 "assets/icon.svg" "$pkgdir/usr/share/clipboard-history/assets/icon.svg"
+  install -Dm644 assets/icon.svg "$pkgdir/usr/share/icons/hicolor/scalable/apps/$pkgname.svg"
 
-  install -d "$pkgdir/usr/share/clipboard-history/gui"
-  install -Dm644 "gui/button_icon.py" "$pkgdir/usr/share/clipboard-history/gui/button_icon.py"
-  install -Dm644 "gui/read.py" "$pkgdir/usr/share/clipboard-history/gui/read.py"
+  install -d "$pkgdir/usr/share/$pkgname/assets"
+  install -Dm644 assets/icon.svg "$pkgdir/usr/share/$pkgname/assets/icon.svg"
 
-  cp -r venv "$pkgdir/usr/share/clipboard-history/venv"
+  install -d "$pkgdir/usr/share/$pkgname/gui"
+  install -Dm644 gui/button_icon.py "$pkgdir/usr/share/$pkgname/gui/button_icon.py"
+  install -Dm644 gui/read.py "$pkgdir/usr/share/$pkgname/gui/read.py"
 
-  # Instalar archivo .desktop para que rofi y el sistema reconozcan la app
-  install -Dm644 clipboard-history.desktop "$pkgdir/usr/share/applications/clipboard-history.desktop"
+  # Instalar archivo .desktop
+  install -Dm644 clipboard-history.desktop "$pkgdir/usr/share/applications/$pkgname.desktop"
 
-  # Instalar icono en lugar estándar para que se muestre en rofi y otros launchers
-  install -Dm644 assets/icon.svg "$pkgdir/usr/share/icons/hicolor/scalable/apps/clipboard-history.svg"
-
-  # Crear script lanzador con nohup para correr en background
-  cat > "$pkgdir/usr/bin/clipboard-history" << EOF
+  # Crear lanzador
+  install -Dm755 /dev/stdin "$pkgdir/usr/bin/$pkgname" << 'EOF'
 #!/bin/bash
 export AUTO_EXEC_PASTE=1
-source /usr/share/clipboard-history/venv/bin/activate
-nohup python /usr/share/clipboard-history/main.py >/dev/null 2>&1 &
+python /usr/share/clipboard-history/main.py &
 /usr/share/clipboard-history/clipboard_history.sh
 EOF
-
-  chmod +x "$pkgdir/usr/bin/clipboard-history"
 }
