@@ -1,4 +1,4 @@
-#!/home/leonardo/Projects/history_clip/.venv/bin/python
+#!/home/leonardo/Projects/clipboard-history/.venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
