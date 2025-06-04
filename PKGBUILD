@@ -9,7 +9,7 @@ license=('MIT')
 depends=('python' 'xclip' 'xsel' 'wl-clipboard' 'gtk3' 'python-gobject')  # libs del sistema
 makedepends=('python-pip' 'python-virtualenv')  # para crear venv e instalar deps
 
-source=("clipboard-history.tar.gz")
+source=("https://github.com/Leonardo-Antonio/clipboard-history/releases/download/v0.1/clipboard-history.tar.gz")
 sha256sums=('SKIP')
 build() {
   cd "$srcdir"
