@@ -1,0 +1,5 @@
+#!/bin/bash
+export AUTO_EXEC_PASTE=1
+python3 /usr/share/clipboard-history/main.py &
+/usr/share/clipboard-history/clipboard_history.sh
+

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Clipboard History
+Comment=Guardar y visualizar el historial del portapapeles
+Exec=clipboard-history
+Icon=/usr/share/clipboard-history/assets/icon.svg
+Terminal=false
+Type=Application
+Categories=Utility;
