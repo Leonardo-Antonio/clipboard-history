@@ -14,11 +14,16 @@ trap ctrl_c SIGINT
 trap clear_files_tmp SIGTERM
 
 function only_x_items() {
-    find /tmp/history/* -type f -name "*history.log" | xargs ls -tr | tail -n 10 | xargs -I {} mv {} /tmp/history/tmp
-    find /tmp/history/* -maxdepth 0 -type f -name "*history.log" | xargs rm
-
-    mv /tmp/history/tmp/* /tmp/history/
+    files=($(find /tmp/history/ -maxdepth 1 -type f -name "*history.log" -printf "%T@ %p\n" | sort -n | awk '{print $2}'))
+    count=${#files[@]}
+    if [ "$count" -gt 10 ]; then
+        REMOVE_FILES_COUNT=$((count - 10))
+        for ((i=0; i<REMOVE_FILES_COUNT; i++)); do
+            rm -f "${files[$i]}"
+        done
+    fi
 }
+
 
 
 HISTORY_PATH="/tmp/history/"
@@ -28,19 +33,23 @@ LAST_CLIPBOARD=""
 mkdir -p $HISTORY_PATH $HISTORY_PATH_TMP
 
 ITERATIONS=0
+COUNTER=0
 while true; do
     CURRENT_CLIPBOARD=$(xclip -o -selection clipboard 2>/dev/null)
-    # if [[ $ITERATIONS -gt 10 ]]; then
-    #     ITERATIONS=0
-    #     only_x_items
-    # fi
 
     if [[ "$CURRENT_CLIPBOARD" != "$LAST_CLIPBOARD" ]]; then
         ITERATIONS=$((ITERATIONS + 1))
+        COUNTER=$((COUNTER + 1))
         LAST_CLIPBOARD="$CURRENT_CLIPBOARD"
         FILENAME="$ITERATIONS"_clip_history.log
         echo "$CURRENT_CLIPBOARD" > "$HISTORY_PATH$FILENAME"
-        echo "escrito en $FILENAME"
+    fi
+
+    echo "$COUNTER"
+    if [[ $COUNTER -gt 10 ]]; then
+        echo "entro en el if"
+        COUNTER=$((COUNTER - 1))
+        only_x_items
     fi
 
     sleep 0.5

@@ -7,7 +7,7 @@ from functools import partial
 from pyperclip import paste, copy
 from pyautogui import hotkey
 from os import getenv
-
+import subprocess
 
 class TrayIcon:
     def __init__(self):
@@ -42,7 +42,9 @@ class TrayIcon:
             hotkey('ctrl', 'v')
 
     def on_quit(self, widget):
+        subprocess.run(["sh", "kill.sh"])
         Gtk.main_quit()
+
         
 def run():
     signal.signal(signal.SIGINT, signal.SIG_DFL)
