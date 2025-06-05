@@ -1,5 +1,5 @@
 pkgname=clipboard-history
-pkgver=0.1
+pkgver=0.3
 pkgrel=1
 pkgdesc="Aplicación en Python para guardar y visualizar el historial del portapapeles"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 depends=('python' 'xclip' 'xsel' 'wl-clipboard' 'gtk3' 'python-gobject')  # libs del sistema
 makedepends=('python-pip' 'python-virtualenv')  # para crear venv e instalar deps
 
-source=("clipboard-history.tar.gz")
+source=("https://github.com/Leonardo-Antonio/clipboard-history/releases/download/v$pkgver/clipboard-history.tar.gz")
 sha256sums=('SKIP')
 
 build() {

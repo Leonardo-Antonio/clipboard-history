@@ -30,16 +30,17 @@ mkdir -p $HISTORY_PATH $HISTORY_PATH_TMP
 ITERATIONS=0
 while true; do
     CURRENT_CLIPBOARD=$(xclip -o -selection clipboard 2>/dev/null)
-    if [[ $ITERATIONS -gt 10 ]]; then
-        ITERATIONS=0
-        only_x_items
-    fi
+    # if [[ $ITERATIONS -gt 10 ]]; then
+    #     ITERATIONS=0
+    #     only_x_items
+    # fi
 
     if [[ "$CURRENT_CLIPBOARD" != "$LAST_CLIPBOARD" ]]; then
         ITERATIONS=$((ITERATIONS + 1))
         LAST_CLIPBOARD="$CURRENT_CLIPBOARD"
         FILENAME="$ITERATIONS"_clip_history.log
         echo "$CURRENT_CLIPBOARD" > "$HISTORY_PATH$FILENAME"
+        echo "escrito en $FILENAME"
     fi
 
     sleep 0.5
