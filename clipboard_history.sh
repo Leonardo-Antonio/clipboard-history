@@ -45,9 +45,7 @@ while true; do
         echo "$CURRENT_CLIPBOARD" > "$HISTORY_PATH$FILENAME"
     fi
 
-    echo "$COUNTER"
     if [[ $COUNTER -gt 10 ]]; then
-        echo "entro en el if"
         COUNTER=$((COUNTER - 1))
         only_x_items
     fi
